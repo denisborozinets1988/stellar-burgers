@@ -33,12 +33,6 @@ const ingredientsSlice = createSlice({
   },
   selectors: {
     selectIngredients: (sliceState) => sliceState.ingredients,
-    selectBuns: (sliceState) =>
-      sliceState.ingredients.filter((x) => x.type === 'bun'),
-    selectMains: (sliceState) =>
-      sliceState.ingredients.filter((x) => x.type === 'main'),
-    selectSauces: (sliceState) =>
-      sliceState.ingredients.filter((x) => x.type === 'sauce'),
     selectIsLoading: (sliceState) => sliceState.isLoading,
     selectError: (sliceState) => sliceState.error
   },
@@ -57,13 +51,8 @@ const ingredientsSlice = createSlice({
   }
 });
 
-export const {
-  selectIngredients,
-  selectBuns,
-  selectMains,
-  selectSauces,
-  selectIsLoading,
-  selectError
-} = ingredientsSlice.selectors;
+export const { selectIngredients, selectIsLoading, selectError } =
+  ingredientsSlice.selectors;
+
 export const { ingredients } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

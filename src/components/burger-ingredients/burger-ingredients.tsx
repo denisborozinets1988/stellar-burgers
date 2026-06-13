@@ -5,16 +5,13 @@ import { TIngredient, TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/services/store';
-import {
-  selectBuns,
-  selectMains,
-  selectSauces
-} from '../../slices/ingredientsSlice';
+import { selectIngredients } from '../../slices/ingredientsSlice';
 
 export const BurgerIngredients: FC = () => {
-  const buns = useSelector<RootState, TIngredient[]>(selectBuns);
-  const mains = useSelector<RootState, TIngredient[]>(selectMains);
-  const sauces = useSelector<RootState, TIngredient[]>(selectSauces);
+  const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);
+  const buns = ingredients.filter((x) => x.type === 'bun');
+  const mains = ingredients.filter((x) => x.type === 'main');
+  const sauces = ingredients.filter((x) => x.type === 'sauce');
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
