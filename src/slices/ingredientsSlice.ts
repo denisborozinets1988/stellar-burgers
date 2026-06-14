@@ -4,13 +4,13 @@ import { getIngredientsApi } from '../utils/burger-api';
 import { TIngredient } from '@utils-types';
 
 interface IIngredientsState {
-  ingredients: TIngredient[];
+  items: TIngredient[];
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: IIngredientsState = {
-  ingredients: [],
+  items: [],
   isLoading: true,
   error: null
 };
@@ -26,13 +26,9 @@ export const fetchIngredients = createAsyncThunk(
 const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {
-    ingredients(state) {
-      state.ingredients;
-    }
-  },
+  reducers: {},
   selectors: {
-    selectIngredients: (sliceState) => sliceState.ingredients,
+    selectItems: (sliceState) => sliceState.items,
     selectIsLoading: (sliceState) => sliceState.isLoading,
     selectError: (sliceState) => sliceState.error
   },
@@ -42,7 +38,7 @@ const ingredientsSlice = createSlice({
     });
     builder.addCase(fetchIngredients.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.ingredients = action.payload;
+      state.items = action.payload;
     });
     builder.addCase(fetchIngredients.rejected, (state) => {
       state.isLoading = false;
@@ -51,8 +47,7 @@ const ingredientsSlice = createSlice({
   }
 });
 
-export const { selectIngredients, selectIsLoading, selectError } =
+export const { selectItems, selectIsLoading, selectError } =
   ingredientsSlice.selectors;
 
-export const { ingredients } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

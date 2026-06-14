@@ -4,21 +4,19 @@ import {
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
-import ingredientsSliceReducer from '../slices/ingredientsSlice';
-
-const rootReducer = {
-  ingredients: ingredientsSliceReducer
-}; // Заменить на импорт настоящего редьюсера
+import ingredients from '../slices/ingredientsSlice';
+import constructorSliceReducer from '../slices/constructorSlice';
 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    ingredients,
+    constructorItems: constructorSliceReducer
+  },
   devTools: process.env.NODE_ENV !== 'production'
 });
 
 export type RootState = ReturnType<typeof store.getState>;
-
 export type AppDispatch = typeof store.dispatch;
-
 export const useDispatch: () => AppDispatch = () => dispatchHook();
 export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
 

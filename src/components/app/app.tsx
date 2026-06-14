@@ -8,7 +8,7 @@ import { AppDispatch, RootState } from '../../services/store';
 import {
   fetchIngredients,
   selectIsLoading,
-  selectIngredients,
+  selectItems,
   selectError
 } from '../../slices/ingredientsSlice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
-  const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);
+  const ingredients = useSelector<RootState, TIngredient[]>(selectItems);
   const isIngredientsLoading = useSelector<RootState, boolean>(selectIsLoading);
   const error = useSelector<RootState, string | null>(selectError);
   const dispatch = useDispatch<AppDispatch>();

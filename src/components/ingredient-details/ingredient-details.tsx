@@ -5,12 +5,12 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/services/store';
 import { TIngredient } from '@utils-types';
-import { selectIngredients } from '../../slices/ingredientsSlice';
+import { selectItems } from '../../slices/ingredientsSlice';
 
 export const IngredientDetails: FC = () => {
   const { id } = useParams();
   const ingredientData = useSelector<RootState, TIngredient[]>(
-    selectIngredients
+    selectItems
   ).find((x) => x._id === id);
 
   if (!ingredientData) {
