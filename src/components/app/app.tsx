@@ -1,4 +1,4 @@
-import { ConstructorPage } from '@pages';
+import { ConstructorPage, ForgotPassword, Login, Register } from '@pages';
 //import '../../index.css';
 import styles from './app.module.css';
 
@@ -69,6 +69,33 @@ const App = () => {
               <div className={`${styles.title}`}>
                 <IngredientDetails />
               </div>
+            </div>
+          }
+        />
+        <Route
+          path={'/login'}
+          element={
+            <div className={styles.app}>
+              <AppHeader />
+              <Login />
+            </div>
+          }
+        />
+        <Route
+          path={'/register'}
+          element={
+            <div className={styles.app}>
+              <AppHeader />
+              <Register />
+            </div>
+          }
+        />
+        <Route
+          path={'/forgot-password'}
+          element={
+            <div className={styles.app}>
+              <AppHeader />
+              <ForgotPassword />
             </div>
           }
         />

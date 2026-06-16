@@ -1,13 +1,21 @@
 import { FC, useMemo } from 'react';
-import { TConstructorIngredient } from '@utils-types';
+import { TConstructorIngredient, TUser } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../services/store';
 import { selectBun, selectItems } from '../../slices/constructorSlice';
+import { selectUser } from '../../slices/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems+, orderRequest и orderModalData из стора */
+  const user = useSelector<RootState, TUser | null>(selectUser);
   const bun = useSelector<RootState, TConstructorIngredient | null>(selectBun);
+  const ingredients = useSelector<RootState, TConstructorIngredient[]>(
+    selectItems
+  );
+  const navigate = useNavigate();
+
   const constructorItems = {
     ...(bun && {
       bun: {
@@ -16,14 +24,27 @@ export const BurgerConstructor: FC = () => {
         image: bun.image
       }
     }),
-    ingredients: useSelector<RootState, TConstructorIngredient[]>(selectItems)
+    ingredients: ingredients
   };
 
   const orderRequest = false;
-  const orderModalData = null;
+  const orderModalData = null; /*{
+    _id: 'string',
+    status: 'string',
+    name: 'string',
+    createdAt: 'string',
+    updatedAt: 'string',
+    number: 12345,
+    ingredients: ['1']
+  };*/
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
+    if (user) {
+      console.log(123);
+    } else {
+      navigate('/login');
+    }
   };
   const closeOrderModal = () => {};
 

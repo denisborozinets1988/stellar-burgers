@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../utils/burger-api';
 import { TIngredient } from '@utils-types';
 
@@ -49,5 +48,4 @@ const ingredientsSlice = createSlice({
 
 export const { selectItems, selectIsLoading, selectError } =
   ingredientsSlice.selectors;
-
 export default ingredientsSlice.reducer;

@@ -6,11 +6,13 @@ import {
 } from 'react-redux';
 import ingredients from '../slices/ingredientsSlice';
 import constructorSliceReducer from '../slices/constructorSlice';
+import userSliceReducer from '../slices/userSlice';
 
 const store = configureStore({
   reducer: {
     ingredients,
-    constructorItems: constructorSliceReducer
+    constructorItems: constructorSliceReducer,
+    user: userSliceReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });
