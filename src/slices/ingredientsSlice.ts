@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getIngredientsApi } from '../utils/burger-api';
+import { getIngredientsApi } from '@api';
 import { TIngredient } from '@utils-types';
 
 interface IIngredientsState {
@@ -27,9 +27,9 @@ const ingredientsSlice = createSlice({
   initialState,
   reducers: {},
   selectors: {
-    selectItems: (sliceState) => sliceState.items,
-    selectIsLoading: (sliceState) => sliceState.isLoading,
-    selectError: (sliceState) => sliceState.error
+    selectIngredients: (sliceState) => sliceState.items,
+    selectIngredientsIsLoading: (sliceState) => sliceState.isLoading,
+    selectIngredientsError: (sliceState) => sliceState.error
   },
   extraReducers: (builder) => {
     builder.addCase(fetchIngredients.pending, (state) => {
@@ -46,6 +46,9 @@ const ingredientsSlice = createSlice({
   }
 });
 
-export const { selectItems, selectIsLoading, selectError } =
-  ingredientsSlice.selectors;
+export const {
+  selectIngredients,
+  selectIngredientsIsLoading,
+  selectIngredientsError
+} = ingredientsSlice.selectors;
 export default ingredientsSlice.reducer;

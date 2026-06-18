@@ -1,4 +1,10 @@
-import { ConstructorPage, ForgotPassword, Login, Register } from '@pages';
+import {
+  ConstructorPage,
+  ForgotPassword,
+  Login,
+  Register,
+  ResetPassword
+} from '@pages';
 //import '../../index.css';
 import styles from './app.module.css';
 
@@ -7,22 +13,43 @@ import { Preloader } from '@ui';
 import { AppDispatch, RootState } from '../../services/store';
 import {
   fetchIngredients,
-  selectIsLoading,
-  selectItems,
-  selectError
+  selectIngredientsIsLoading,
+  selectIngredients,
+  selectIngredientsError
 } from '../../slices/ingredientsSlice';
+import {
+  selectUser,
+  selectUserIsRequested,
+  selectUserError
+} from '../../slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TUser } from '@utils-types';
 import { Children, useEffect } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate
+} from 'react-router-dom';
+import { RedirectIfAuthenticated } from '../redirect-if-authenticated';
 
 const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
-  const ingredients = useSelector<RootState, TIngredient[]>(selectItems);
-  const isIngredientsLoading = useSelector<RootState, boolean>(selectIsLoading);
-  const error = useSelector<RootState, string | null>(selectError);
+  const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);
+  const isIngredientsLoading = useSelector<RootState, boolean>(
+    selectIngredientsIsLoading
+  );
+  const ingredientsLoadingError = useSelector<RootState, string | null>(
+    selectIngredientsError
+  );
+  const user = useSelector<RootState, TUser | null>(selectUser);
+  const userIsRequested = useSelector<RootState, boolean>(
+    selectUserIsRequested
+  );
+  const userError = useSelector<RootState, string | null>(selectUserError);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -38,11 +65,11 @@ const App = () => {
               <AppHeader />
               {isIngredientsLoading ? (
                 <Preloader />
-              ) : error ? (
+              ) : ingredientsLoadingError ? (
                 <div
                   className={`${styles.error} text text_type_main-medium pt-4`}
                 >
-                  {error}
+                  {ingredientsLoadingError}
                 </div>
               ) : ingredients.length > 0 ? (
                 <ConstructorPage />
@@ -77,7 +104,9 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader />
-              <Login />
+              <RedirectIfAuthenticated>
+                <Login />
+              </RedirectIfAuthenticated>
             </div>
           }
         />
@@ -86,7 +115,26 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader />
-              <Register />
+              {userIsRequested ? (
+                <Preloader />
+              ) : userError ? (
+                <>
+                  <RedirectIfAuthenticated>
+                    <Register />
+                  </RedirectIfAuthenticated>
+                  <div
+                    className={`${styles.error} text text_type_main-medium pt-4`}
+                  >
+                    {userError}
+                  </div>
+                </>
+              ) : user ? (
+                <Navigate to='/' replace />
+              ) : (
+                <RedirectIfAuthenticated>
+                  <Register />
+                </RedirectIfAuthenticated>
+              )}
             </div>
           }
         />
@@ -95,7 +143,20 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader />
-              <ForgotPassword />
+              <RedirectIfAuthenticated>
+                <ForgotPassword />
+              </RedirectIfAuthenticated>
+            </div>
+          }
+        />
+        <Route
+          path={'/reset-password'}
+          element={
+            <div className={styles.app}>
+              <AppHeader />
+              <RedirectIfAuthenticated>
+                <ResetPassword />
+              </RedirectIfAuthenticated>
             </div>
           }
         />
