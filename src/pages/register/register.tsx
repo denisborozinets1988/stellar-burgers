@@ -3,7 +3,6 @@ import { RegisterUI } from '@ui-pages';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../services/store';
 import { registerUser } from '../../slices/userSlice';
-import { TRegisterData } from '@api';
 
 export const Register: FC = () => {
   const [userName, setUserName] = useState('');
@@ -14,10 +13,10 @@ export const Register: FC = () => {
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
     const data = {
-      email: 'Adqwwedwedwe11@ya.ru',
-      name: 'Adqwwedwedwe11',
+      email: 'qwerqwewere23efwf@ya.ru',
+      name: 'rqwerqwer',
       password: 'password123'
-    } as TRegisterData;
+    };
 
     dispatch(registerUser(data));
   };

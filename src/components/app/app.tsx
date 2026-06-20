@@ -20,7 +20,8 @@ import {
 import {
   selectUser,
   selectUserIsRequested,
-  selectUserError
+  selectUserError,
+  selectIsSuccessRegistrarion
 } from '../../slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { TIngredient, TUser } from '@utils-types';
@@ -42,10 +43,14 @@ const App = () => {
   const isIngredientsLoading = useSelector<RootState, boolean>(
     selectIngredientsIsLoading
   );
+  const isSuccessRegistrarion = useSelector<RootState, boolean>(
+    selectIsSuccessRegistrarion
+  );
   const ingredientsLoadingError = useSelector<RootState, string | null>(
     selectIngredientsError
   );
   const user = useSelector<RootState, TUser | null>(selectUser);
+  const userName = user?.name ?? 'Личный кабинет';
   const userIsRequested = useSelector<RootState, boolean>(
     selectUserIsRequested
   );
@@ -62,7 +67,7 @@ const App = () => {
           path='/'
           element={
             <div className={styles.app}>
-              <AppHeader />
+              <AppHeader userName={userName} />
               {isIngredientsLoading ? (
                 <Preloader />
               ) : ingredientsLoadingError ? (
@@ -87,7 +92,7 @@ const App = () => {
           path={'/ingredients/:id'}
           element={
             <div className={styles.app}>
-              <AppHeader />
+              <AppHeader userName={userName} />
               <div
                 className={`${styles.title} text text_type_main-medium pt-4`}
               >
@@ -103,10 +108,34 @@ const App = () => {
           path={'/login'}
           element={
             <div className={styles.app}>
-              <AppHeader />
-              <RedirectIfAuthenticated>
-                <Login />
-              </RedirectIfAuthenticated>
+              <AppHeader userName={userName} />
+              {isSuccessRegistrarion && (
+                <div
+                  className={`${styles.title} text text_type_main-medium pt-4`}
+                >
+                  Вы успешно зарегистрировались! Выполните вход.
+                </div>
+              )}
+              {userIsRequested ? (
+                <Preloader />
+              ) : userError ? (
+                <>
+                  <div
+                    className={`${styles.error} text text_type_main-medium pt-4`}
+                  >
+                    {userError}
+                  </div>
+                  <RedirectIfAuthenticated>
+                    <Login />
+                  </RedirectIfAuthenticated>
+                </>
+              ) : user ? (
+                <Navigate to='/' replace />
+              ) : (
+                <RedirectIfAuthenticated>
+                  <Login />
+                </RedirectIfAuthenticated>
+              )}
             </div>
           }
         />
@@ -114,22 +143,22 @@ const App = () => {
           path={'/register'}
           element={
             <div className={styles.app}>
-              <AppHeader />
+              <AppHeader userName={userName} />
               {userIsRequested ? (
                 <Preloader />
               ) : userError ? (
                 <>
-                  <RedirectIfAuthenticated>
-                    <Register />
-                  </RedirectIfAuthenticated>
                   <div
                     className={`${styles.error} text text_type_main-medium pt-4`}
                   >
                     {userError}
                   </div>
+                  <RedirectIfAuthenticated>
+                    <Register />
+                  </RedirectIfAuthenticated>
                 </>
-              ) : user ? (
-                <Navigate to='/' replace />
+              ) : isSuccessRegistrarion ? (
+                <Navigate to='/login' replace />
               ) : (
                 <RedirectIfAuthenticated>
                   <Register />
@@ -142,7 +171,7 @@ const App = () => {
           path={'/forgot-password'}
           element={
             <div className={styles.app}>
-              <AppHeader />
+              <AppHeader userName={userName} />
               <RedirectIfAuthenticated>
                 <ForgotPassword />
               </RedirectIfAuthenticated>
@@ -153,7 +182,7 @@ const App = () => {
           path={'/reset-password'}
           element={
             <div className={styles.app}>
-              <AppHeader />
+              <AppHeader userName={userName} />
               <RedirectIfAuthenticated>
                 <ResetPassword />
               </RedirectIfAuthenticated>
