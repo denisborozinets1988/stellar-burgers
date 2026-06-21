@@ -1,7 +1,9 @@
 import {
   ConstructorPage,
+  Feed,
   ForgotPassword,
   Login,
+  Profile,
   Register,
   ResetPassword
 } from '@pages';
@@ -33,7 +35,6 @@ import {
   useLocation,
   useNavigate
 } from 'react-router-dom';
-import { RedirectIfAuthenticated } from '../redirect-if-authenticated';
 
 const App = () => {
   const location = useLocation();
@@ -50,7 +51,7 @@ const App = () => {
     selectIngredientsError
   );
   const user = useSelector<RootState, TUser | null>(selectUser);
-  const userName = user?.name ?? 'Личный кабинет';
+  const userName = user?.name;
   const userIsRequested = useSelector<RootState, boolean>(
     selectUserIsRequested
   );
@@ -125,16 +126,15 @@ const App = () => {
                   >
                     {userError}
                   </div>
-                  <RedirectIfAuthenticated>
-                    <Login />
-                  </RedirectIfAuthenticated>
+                  <Login />
                 </>
               ) : user ? (
                 <Navigate to='/' replace />
               ) : (
-                <RedirectIfAuthenticated>
+                <>
                   <Login />
-                </RedirectIfAuthenticated>
+                  {user + '!'}
+                </>
               )}
             </div>
           }
@@ -153,17 +153,27 @@ const App = () => {
                   >
                     {userError}
                   </div>
-                  <RedirectIfAuthenticated>
-                    <Register />
-                  </RedirectIfAuthenticated>
+                  <Register />
                 </>
               ) : isSuccessRegistrarion ? (
                 <Navigate to='/login' replace />
+              ) : user ? (
+                <Navigate to='/' replace />
               ) : (
-                <RedirectIfAuthenticated>
+                <>
                   <Register />
-                </RedirectIfAuthenticated>
+                  {user + '!'}
+                </>
               )}
+            </div>
+          }
+        />
+        <Route
+          path={'/profile'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              {user ? <Profile /> : <Navigate to='/login' replace />}
             </div>
           }
         />
@@ -172,9 +182,7 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              <RedirectIfAuthenticated>
-                <ForgotPassword />
-              </RedirectIfAuthenticated>
+              <ForgotPassword />
             </div>
           }
         />
@@ -183,9 +191,16 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              <RedirectIfAuthenticated>
-                <ResetPassword />
-              </RedirectIfAuthenticated>
+              <ResetPassword />
+            </div>
+          }
+        />
+        <Route
+          path={'/feed'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <Feed />
             </div>
           }
         />
