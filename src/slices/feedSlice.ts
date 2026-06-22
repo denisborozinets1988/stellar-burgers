@@ -1,5 +1,5 @@
-import { getFeedsApi, getOrdersApi } from '@api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getFeedsApi, getOrderByNumberApi, getOrdersApi } from '@api';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
 export type TFeedCounts = {
@@ -9,6 +9,7 @@ export type TFeedCounts = {
 
 interface TFeedsState {
   orders: TOrder[];
+  orderData: TOrder | null;
   counts: TFeedCounts;
   isRequested: boolean;
   error: string | null;
@@ -21,6 +22,7 @@ const counts: TFeedCounts = {
 
 const initialState: TFeedsState = {
   orders: [],
+  orderData: null,
   isRequested: false,
   counts: counts,
   error: null
@@ -31,12 +33,18 @@ export const getFeeds = createAsyncThunk(
   async () => await getFeedsApi()
 );
 
+export const getOrderByNumber = createAsyncThunk(
+  'order',
+  async (number: number) => await getOrderByNumberApi(number)
+);
+
 const feedSlice = createSlice({
   name: 'feeds',
   initialState,
   reducers: {},
   selectors: {
     selectFeed: (sliceState) => sliceState.orders,
+    selectOrderData: (sliceState) => sliceState.orderData,
     selectFeedCounts: (sliceState) => sliceState.counts,
     selectFeedIsRequested: (sliceState) => sliceState.isRequested,
     selectFeedError: (sliceState) => sliceState.error
@@ -59,12 +67,34 @@ const feedSlice = createSlice({
         state.counts.totalToday = action.payload.totalToday;
         state.isRequested = false;
         state.error = null;
+      })
+
+      .addCase(getOrderByNumber.pending, (state) => {
+        state.orderData = null;
+        state.isRequested = true;
+        state.error = null;
+      })
+      .addCase(getOrderByNumber.rejected, (state, action) => {
+        state.orderData = null;
+        state.isRequested = false;
+        state.error = 'Ой, что-то пошло не так...';
+      })
+      .addCase(getOrderByNumber.fulfilled, (state, action) => {
+        if (action.payload.orders.length) {
+          state.orderData = action.payload.orders[0];
+        } else {
+          state.orderData = null;
+          state.error = 'Кажется заказа с таким номером нет...';
+        }
+        state.isRequested = false;
+        state.error = null;
       });
   }
 });
 
 export const {
   selectFeed,
+  selectOrderData,
   selectFeedCounts,
   selectFeedIsRequested,
   selectFeedError

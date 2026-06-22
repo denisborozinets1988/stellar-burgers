@@ -1,6 +1,7 @@
-import { loginUserApi, registerUserApi, TRegisterData } from '@api';
+import { getUserApi, loginUserApi, registerUserApi, TRegisterData } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
+import { getCookie, setCookie } from '../../src/utils/cookie';
 import { json } from 'stream/consumers';
 
 interface TUserState {
@@ -33,6 +34,11 @@ export const registerUser = createAsyncThunk(
     await registerUserApi({ name, email, password })
 );
 
+export const getUser = createAsyncThunk(
+  'auth/getUser',
+  async () => await getUserApi()
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -42,7 +48,8 @@ const userSlice = createSlice({
     selectUserIsRequested: (sliceState) => sliceState.isRequested,
     selectIsSuccessRegistrarion: (sliceState) =>
       sliceState.isSuccessRegistrarion,
-    selectUserError: (sliceState) => sliceState.error
+    selectUserError: (sliceState) => sliceState.error,
+    selectIsAuthChecked: (sliceState) => sliceState.isAuthChecked
   },
   extraReducers: (builder) => {
     builder
@@ -74,6 +81,10 @@ const userSlice = createSlice({
         state.isAuthChecked = true;
         state.error = null;
         state.isSuccessRegistrarion = false;
+        setCookie('accessToken', action.payload.accessToken, {
+          expires: 1000000
+        });
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
 
       .addCase(registerUser.pending, (state) => {
@@ -97,11 +108,37 @@ const userSlice = createSlice({
         state.isSuccessRegistrarion = false;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
+        state.data = null;
         state.isRequested = false;
         state.isAuthenticated = false;
         state.isAuthChecked = false;
         state.error = null;
         state.isSuccessRegistrarion = true;
+      })
+
+      .addCase(getUser.pending, (state) => {
+        state.data = null;
+        state.isRequested = true;
+        state.isAuthenticated = false;
+        state.isAuthChecked = false;
+        state.error = null;
+        state.isSuccessRegistrarion = false;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        state.data = null;
+        state.isRequested = false;
+        state.isAuthenticated = false;
+        state.isAuthChecked = true;
+        state.error = null;
+        state.isSuccessRegistrarion = false;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.data = action.payload.user;
+        state.isRequested = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
+        state.error = null;
+        state.isSuccessRegistrarion = false;
       });
   }
 });
@@ -110,6 +147,7 @@ export const {
   selectUser,
   selectUserIsRequested,
   selectUserError,
-  selectIsSuccessRegistrarion
+  selectIsSuccessRegistrarion,
+  selectIsAuthChecked
 } = userSlice.selectors;
 export default userSlice.reducer;

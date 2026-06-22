@@ -10,7 +10,13 @@ import {
 //import '../../index.css';
 import styles from './app.module.css';
 
-import { AppHeader, IngredientDetails, Modal } from '@components';
+import {
+  AppHeader,
+  FeedInfo,
+  IngredientDetails,
+  Modal,
+  OrderInfo
+} from '@components';
 import { Preloader } from '@ui';
 import { AppDispatch, RootState } from '../../services/store';
 import {
@@ -23,7 +29,9 @@ import {
   selectUser,
   selectUserIsRequested,
   selectUserError,
-  selectIsSuccessRegistrarion
+  selectIsSuccessRegistrarion,
+  selectIsAuthChecked,
+  getUser
 } from '../../slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { TIngredient, TUser } from '@utils-types';
@@ -47,6 +55,7 @@ const App = () => {
   const isSuccessRegistrarion = useSelector<RootState, boolean>(
     selectIsSuccessRegistrarion
   );
+  const isAuthChecked = useSelector<RootState, boolean>(selectIsAuthChecked);
   const ingredientsLoadingError = useSelector<RootState, string | null>(
     selectIngredientsError
   );
@@ -57,6 +66,11 @@ const App = () => {
   );
   const userError = useSelector<RootState, string | null>(selectUserError);
   const dispatch = useDispatch<AppDispatch>();
+
+  if (!isAuthChecked && !userIsRequested) {
+    dispatch(getUser());
+  }
+
   useEffect(() => {
     dispatch(fetchIngredients());
   }, [dispatch]);
@@ -203,6 +217,22 @@ const App = () => {
               <Feed />
             </div>
           }
+        />{' '}
+        <Route
+          path={'/feed/:id'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <div
+                className={`${styles.title} text text_type_main-medium pt-4`}
+              >
+                Детали заказа
+              </div>
+              <div className={`${styles.title}`}>
+                <OrderInfo />
+              </div>
+            </div>
+          }
         />
       </Routes>
 
@@ -213,6 +243,14 @@ const App = () => {
             element={
               <Modal title={'Детали ингредиента'} onClose={() => navigate(-1)}>
                 <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path={'/feed/:id'}
+            element={
+              <Modal title={'Детали заказа'} onClose={() => navigate(-1)}>
+                <OrderInfo />
               </Modal>
             }
           />

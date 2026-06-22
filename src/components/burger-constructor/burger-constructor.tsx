@@ -28,20 +28,11 @@ export const BurgerConstructor: FC = () => {
   };
 
   const orderRequest = false;
-  const orderModalData = null; /*{
-    _id: 'string',
-    status: 'string',
-    name: 'string',
-    createdAt: 'string',
-    updatedAt: 'string',
-    number: 12345,
-    ingredients: ['1']
-  };*/
+  const orderModalData = null;
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
     if (user) {
-      console.log(123);
     } else {
       navigate('/login');
     }
