@@ -72,7 +72,6 @@ const userSlice = createSlice({
           state.error = 'Ой, что-то пошло не так...';
         }
         state.isSuccessRegistrarion = false;
-        console.log(action);
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.data = action.payload.user;

@@ -15,6 +15,7 @@ import {
 export const OrderInfo: FC = () => {
   const { id } = useParams();
   const orders = useSelector<RootState, TOrder[]>(selectFeed);
+  const dispatch = useDispatch<AppDispatch>();
   let orderData = useSelector<RootState, TOrder | null>(selectOrderData);
 
   if (orders.length) {
@@ -22,7 +23,6 @@ export const OrderInfo: FC = () => {
       orders.find((x) => x.number === Number.parseInt(id ?? '')) ?? null;
   } else {
     if (!orderData) {
-      const dispatch = useDispatch<AppDispatch>();
       dispatch(getOrderByNumber(Number.parseInt(id ?? '')));
     }
   }

@@ -35,6 +35,10 @@ const constructorSlice = createSlice({
         (x) => x.id !== action.payload
       );
     },
+    removeConstructorItemsAll: (state) => {
+      state.constructorItems = [];
+      state.bun = null;
+    },
     moveUpConstructorItems: (state, action: PayloadAction<string>) => {
       state.constructorItems = moveItem(
         state.constructorItems,
@@ -90,6 +94,7 @@ function moveItem(
 export const {
   addConstructorItems,
   removeConstructorItems,
+  removeConstructorItemsAll,
   moveUpConstructorItems,
   moveDownConstructorItems
 } = constructorSlice.actions;

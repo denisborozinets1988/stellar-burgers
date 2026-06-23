@@ -8,13 +8,15 @@ import ingredients from '../slices/ingredientsSlice';
 import constructorSliceReducer from '../slices/constructorSlice';
 import userSliceReducer from '../slices/userSlice';
 import orderListAllUsersSliceReducer from '../slices/feedSlice';
+import orderCurrentSliceReducer from '../slices/orderCurrentSlice';
 
 const store = configureStore({
   reducer: {
     ingredients,
     constructorItems: constructorSliceReducer,
     user: userSliceReducer,
-    feeds: orderListAllUsersSliceReducer
+    feeds: orderListAllUsersSliceReducer,
+    order: orderCurrentSliceReducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });

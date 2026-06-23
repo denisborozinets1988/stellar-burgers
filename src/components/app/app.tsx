@@ -15,7 +15,8 @@ import {
   FeedInfo,
   IngredientDetails,
   Modal,
-  OrderInfo
+  OrderInfo,
+  ProfileMenu
 } from '@components';
 import { Preloader } from '@ui';
 import { AppDispatch, RootState } from '../../services/store';
@@ -187,7 +188,13 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              {user ? <Profile /> : <Navigate to='/login' replace />}
+              {user ? (
+                <>
+                  <Profile />
+                </>
+              ) : (
+                <Navigate to='/login' replace />
+              )}
             </div>
           }
         />

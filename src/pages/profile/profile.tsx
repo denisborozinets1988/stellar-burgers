@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 
 export const Profile: FC = () => {
   const userState = useSelector<RootState, TUser | null>(selectUser);
+
   const user = {
     name: userState?.name ?? '',
     email: userState?.email ?? ''
