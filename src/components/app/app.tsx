@@ -8,18 +8,10 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-//import '../../index.css';
+
 import styles from './app.module.css';
 
-import {
-  AppHeader,
-  FeedInfo,
-  IngredientDetails,
-  Modal,
-  OrderInfo,
-  OrdersList,
-  ProfileMenu
-} from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Preloader } from '@ui';
 import { AppDispatch, RootState } from '../../services/store';
 import {
@@ -38,7 +30,7 @@ import {
 } from '../../slices/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { TIngredient, TUser } from '@utils-types';
-import { Children, useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   Navigate,
   Route,
