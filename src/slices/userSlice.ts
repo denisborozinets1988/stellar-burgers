@@ -1,7 +1,13 @@
-import { getUserApi, loginUserApi, registerUserApi, TRegisterData } from '@api';
+import {
+  getUserApi,
+  loginUserApi,
+  logoutApi,
+  registerUserApi,
+  TRegisterData
+} from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
-import { getCookie, setCookie } from '../../src/utils/cookie';
+import { deleteCookie, getCookie, setCookie } from '../../src/utils/cookie';
 import { json } from 'stream/consumers';
 
 interface TUserState {
@@ -37,6 +43,11 @@ export const registerUser = createAsyncThunk(
 export const getUser = createAsyncThunk(
   'auth/getUser',
   async () => await getUserApi()
+);
+
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async () => await logoutApi()
 );
 
 const userSlice = createSlice({
@@ -128,7 +139,7 @@ const userSlice = createSlice({
         state.isRequested = false;
         state.isAuthenticated = false;
         state.isAuthChecked = true;
-        state.error = null;
+        state.error = 'Ой, что-то пошло не так...';
         state.isSuccessRegistrarion = false;
       })
       .addCase(getUser.fulfilled, (state, action) => {
@@ -138,6 +149,24 @@ const userSlice = createSlice({
         state.isAuthChecked = true;
         state.error = null;
         state.isSuccessRegistrarion = false;
+      })
+
+      .addCase(logoutUser.pending, (state) => {
+        state.isRequested = true;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.isRequested = false;
+        state.error = 'Ой, что-то пошло не так...';
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.data = null;
+        state.isRequested = false;
+        state.isAuthenticated = false;
+        state.isAuthChecked = false;
+        state.error = null;
+        state.isSuccessRegistrarion = false;
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
       });
   }
 });

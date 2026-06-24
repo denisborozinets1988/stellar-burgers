@@ -41,7 +41,7 @@ const orderListAllUsersSlice = createSlice({
         state.error = 'Ой, что-то пошло не так...';
       })
       .addCase(getOrders.fulfilled, (state, action) => {
-        console.log(action);
+        state.orders = action.payload;
         state.isRequested = false;
         state.error = null;
       });

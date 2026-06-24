@@ -9,6 +9,7 @@ import constructorSliceReducer from '../slices/constructorSlice';
 import userSliceReducer from '../slices/userSlice';
 import orderListAllUsersSliceReducer from '../slices/feedSlice';
 import orderCurrentSliceReducer from '../slices/orderCurrentSlice';
+import orderListAllUsersSlicereducer from '../slices/orderListUserSlice';
 
 const store = configureStore({
   reducer: {
@@ -16,7 +17,8 @@ const store = configureStore({
     constructorItems: constructorSliceReducer,
     user: userSliceReducer,
     feeds: orderListAllUsersSliceReducer,
-    order: orderCurrentSliceReducer
+    order: orderCurrentSliceReducer,
+    orders: orderListAllUsersSlicereducer
   },
   devTools: process.env.NODE_ENV !== 'production'
 });

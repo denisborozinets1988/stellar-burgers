@@ -11,16 +11,22 @@ import {
   selectFeed,
   selectOrderData
 } from '../../slices/feedSlice';
+import { selectOrders } from '../../slices/orderListUserSlice';
 
 export const OrderInfo: FC = () => {
   const { id } = useParams();
   const orders = useSelector<RootState, TOrder[]>(selectFeed);
+  const ordersUser = useSelector<RootState, TOrder[]>(selectOrders);
+  console.log(location.pathname);
+  const ordersActual: TOrder[] = location.pathname.startsWith('/profile/orders')
+    ? ordersUser
+    : orders;
   const dispatch = useDispatch<AppDispatch>();
   let orderData = useSelector<RootState, TOrder | null>(selectOrderData);
 
-  if (orders.length) {
+  if (ordersActual.length) {
     orderData =
-      orders.find((x) => x.number === Number.parseInt(id ?? '')) ?? null;
+      ordersActual.find((x) => x.number === Number.parseInt(id ?? '')) ?? null;
   } else {
     if (!orderData) {
       dispatch(getOrderByNumber(Number.parseInt(id ?? '')));
