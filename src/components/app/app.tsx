@@ -62,11 +62,12 @@ const App = () => {
   const userError = useSelector<RootState, string | null>(selectUserError);
   const dispatch = useDispatch<AppDispatch>();
 
+  if (!isAuthChecked && !userIsRequested) {
+    dispatch(getUser());
+  }
+
   useEffect(() => {
     dispatch(fetchIngredients());
-    if (!isAuthChecked && !userIsRequested) {
-      dispatch(getUser());
-    }
   }, [dispatch]);
 
   return (
@@ -77,7 +78,7 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              {isIngredientsLoading ? (
+              {isIngredientsLoading || userIsRequested ? (
                 <Preloader />
               ) : ingredientsLoadingError ? (
                 <div
@@ -181,10 +182,53 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              {user ? (
+              {userIsRequested ? (
+                <Preloader />
+              ) : user ? (
                 <>
                   <Profile />
                 </>
+              ) : (
+                <Navigate to='/login' replace />
+              )}
+            </div>
+          }
+        />
+        <Route
+          path={'/profile/orders'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              {userIsRequested ? (
+                <Preloader />
+              ) : user ? (
+                <>
+                  <ProfileOrders />
+                </>
+              ) : (
+                <Navigate to='/login' replace />
+              )}
+            </div>
+          }
+        />
+        <Route
+          path={'/profile/orders/:id'}
+          element={
+            <div className={styles.app}>
+              {userIsRequested ? (
+                <Preloader />
+              ) : user ? (
+                <div className={styles.app}>
+                  <AppHeader userName={userName} />
+                  <div
+                    className={`${styles.title} text text_type_main-medium pt-4`}
+                  >
+                    Детали заказа
+                  </div>
+                  <div className={`${styles.title}`}>
+                    <OrderInfo />
+                  </div>
+                </div>
               ) : (
                 <Navigate to='/login' replace />
               )}
@@ -232,39 +276,6 @@ const App = () => {
                 <OrderInfo />
               </div>
             </div>
-          }
-        />
-        <Route
-          path={'/profile/orders'}
-          element={
-            user ? (
-              <div className={styles.app}>
-                <AppHeader userName={userName} />
-                <ProfileOrders />
-              </div>
-            ) : (
-              <Navigate to='/login' replace />
-            )
-          }
-        />
-        <Route
-          path={'/profile/orders/:id'}
-          element={
-            user ? (
-              <div className={styles.app}>
-                <AppHeader userName={userName} />
-                <div
-                  className={`${styles.title} text text_type_main-medium pt-4`}
-                >
-                  Детали заказа
-                </div>
-                <div className={`${styles.title}`}>
-                  <OrderInfo />
-                </div>
-              </div>
-            ) : (
-              <Navigate to='/login' replace />
-            )
           }
         />
       </Routes>

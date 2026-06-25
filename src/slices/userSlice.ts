@@ -141,7 +141,7 @@ const userSlice = createSlice({
         state.error = null;
         state.isSuccessRegistrarion = false;
       })
-      .addCase(getUser.rejected, (state, action) => {
+      .addCase(getUser.rejected, (state) => {
         state.data = null;
         state.isRequested = false;
         state.isAuthenticated = false;

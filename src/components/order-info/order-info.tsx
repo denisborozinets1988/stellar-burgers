@@ -17,7 +17,6 @@ export const OrderInfo: FC = () => {
   const { id } = useParams();
   const orders = useSelector<RootState, TOrder[]>(selectFeed);
   const ordersUser = useSelector<RootState, TOrder[]>(selectOrders);
-  console.log(location.pathname);
   const ordersActual: TOrder[] = location.pathname.startsWith('/profile/orders')
     ? ordersUser
     : orders;
