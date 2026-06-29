@@ -13,7 +13,7 @@ import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Preloader } from '@ui';
-import { AppDispatch, RootState } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 import {
   fetchIngredients,
   selectIngredientsIsLoading,
@@ -28,8 +28,6 @@ import {
   selectIsAuthChecked,
   getUser
 } from '../../slices/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { TIngredient, TUser } from '@utils-types';
 import { useEffect } from 'react';
 import {
   Navigate,
@@ -43,30 +41,19 @@ const App = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const background = location.state?.background;
-  const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);
-  const isIngredientsLoading = useSelector<RootState, boolean>(
-    selectIngredientsIsLoading
-  );
-  const isSuccessRegistrarion = useSelector<RootState, boolean>(
-    selectIsSuccessRegistrarion
-  );
-  const isAuthChecked = useSelector<RootState, boolean>(selectIsAuthChecked);
-  const ingredientsLoadingError = useSelector<RootState, string | null>(
-    selectIngredientsError
-  );
-  const user = useSelector<RootState, TUser | null>(selectUser);
+  const ingredients = useAppSelector(selectIngredients);
+  const isIngredientsLoading = useAppSelector(selectIngredientsIsLoading);
+  const isSuccessRegistrarion = useAppSelector(selectIsSuccessRegistrarion);
+  const isAuthChecked = useAppSelector(selectIsAuthChecked);
+  const ingredientsLoadingError = useAppSelector(selectIngredientsError);
+  const user = useAppSelector(selectUser);
   const userName = user?.name;
-  const userIsRequested = useSelector<RootState, boolean>(
-    selectUserIsRequested
-  );
-  const userError = useSelector<RootState, string | null>(selectUserError);
-  const dispatch = useDispatch<AppDispatch>();
-
-  if (!isAuthChecked && !userIsRequested) {
-    dispatch(getUser());
-  }
+  const userIsRequested = useAppSelector(selectUserIsRequested);
+  const userError = useAppSelector(selectUserError);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(getUser());
     dispatch(fetchIngredients());
   }, [dispatch]);
 
@@ -215,7 +202,7 @@ const App = () => {
           path={'/profile/orders/:id'}
           element={
             <div className={styles.app}>
-              {userIsRequested ? (
+              {!isAuthChecked ? (
                 <Preloader />
               ) : user ? (
                 <div className={styles.app}>

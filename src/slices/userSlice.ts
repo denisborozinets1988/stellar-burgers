@@ -9,7 +9,6 @@ import {
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import { deleteCookie, getCookie, setCookie } from '../../src/utils/cookie';
-import { json } from 'stream/consumers';
 
 interface TUserState {
   isAuthChecked: boolean;
@@ -125,10 +124,10 @@ const userSlice = createSlice({
         state.isSuccessRegistrarion = false;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.data = null;
+        state.data = action.payload.user;
         state.isRequested = false;
-        state.isAuthenticated = false;
-        state.isAuthChecked = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
         state.error = null;
         state.isSuccessRegistrarion = true;
       })
@@ -186,8 +185,8 @@ const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.data = action.payload.user;
         state.isRequested = false;
-        state.isAuthenticated = false;
-        state.isAuthChecked = false;
+        state.isAuthenticated = true;
+        state.isAuthChecked = true;
         state.error = null;
         state.isSuccessRegistrarion = false;
       });
