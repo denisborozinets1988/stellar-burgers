@@ -25,7 +25,6 @@ import {
   selectUserIsRequested,
   selectUserError,
   selectIsSuccessRegistrarion,
-  selectIsAuthChecked,
   getUser
 } from '../../slices/userSlice';
 import { useEffect } from 'react';
@@ -36,6 +35,7 @@ import {
   useLocation,
   useNavigate
 } from 'react-router-dom';
+import { ProtectedRoute } from '../protectedRoute';
 
 const App = () => {
   const location = useLocation();
@@ -44,7 +44,6 @@ const App = () => {
   const ingredients = useAppSelector(selectIngredients);
   const isIngredientsLoading = useAppSelector(selectIngredientsIsLoading);
   const isSuccessRegistrarion = useAppSelector(selectIsSuccessRegistrarion);
-  const isAuthChecked = useAppSelector(selectIsAuthChecked);
   const ingredientsLoadingError = useAppSelector(selectIngredientsError);
   const user = useAppSelector(selectUser);
   const userName = user?.name;
@@ -124,13 +123,10 @@ const App = () => {
                   </div>
                   <Login />
                 </>
-              ) : user ? (
-                <Navigate to='/' replace />
               ) : (
-                <>
+                <ProtectedRoute onlyUnAuth>
                   <Login />
-                  {user + '!'}
-                </>
+                </ProtectedRoute>
               )}
             </div>
           }
@@ -153,13 +149,10 @@ const App = () => {
                 </>
               ) : isSuccessRegistrarion ? (
                 <Navigate to='/login' replace />
-              ) : user ? (
-                <Navigate to='/' replace />
               ) : (
-                <>
+                <ProtectedRoute onlyUnAuth>
                   <Register />
-                  {user + '!'}
-                </>
+                </ProtectedRoute>
               )}
             </div>
           }
@@ -169,15 +162,9 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              {userIsRequested ? (
-                <Preloader />
-              ) : user ? (
-                <>
-                  <Profile />
-                </>
-              ) : (
-                <Navigate to='/login' replace />
-              )}
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
             </div>
           }
         />
@@ -186,15 +173,9 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              {userIsRequested ? (
-                <Preloader />
-              ) : user ? (
-                <>
-                  <ProfileOrders />
-                </>
-              ) : (
-                <Navigate to='/login' replace />
-              )}
+              <ProtectedRoute>
+                <ProfileOrders />
+              </ProtectedRoute>
             </div>
           }
         />
@@ -202,23 +183,10 @@ const App = () => {
           path={'/profile/orders/:id'}
           element={
             <div className={styles.app}>
-              {!isAuthChecked ? (
-                <Preloader />
-              ) : user ? (
-                <div className={styles.app}>
-                  <AppHeader userName={userName} />
-                  <div
-                    className={`${styles.title} text text_type_main-medium pt-4`}
-                  >
-                    Детали заказа
-                  </div>
-                  <div className={`${styles.title}`}>
-                    <OrderInfo />
-                  </div>
-                </div>
-              ) : (
-                <Navigate to='/login' replace />
-              )}
+              <AppHeader userName={userName} />
+              <ProtectedRoute>
+                <OrderInfo />
+              </ProtectedRoute>
             </div>
           }
         />
@@ -227,7 +195,9 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              <ForgotPassword />
+              <ProtectedRoute onlyUnAuth>
+                <ForgotPassword />
+              </ProtectedRoute>
             </div>
           }
         />
@@ -236,7 +206,9 @@ const App = () => {
           element={
             <div className={styles.app}>
               <AppHeader userName={userName} />
-              <ResetPassword />
+              <ProtectedRoute onlyUnAuth>
+                <ResetPassword />
+              </ProtectedRoute>
             </div>
           }
         />

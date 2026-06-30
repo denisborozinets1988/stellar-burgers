@@ -82,7 +82,7 @@ const userSlice = createSlice({
         state.data = null;
         state.isRequested = false;
         state.isAuthenticated = false;
-        state.isAuthChecked = false;
+        state.isAuthChecked = true;
         if (action.error.message === 'email or password are incorrect') {
           state.error = 'Неверный логин или пароль!';
         } else {
@@ -115,7 +115,7 @@ const userSlice = createSlice({
         state.data = null;
         state.isRequested = false;
         state.isAuthenticated = false;
-        state.isAuthChecked = false;
+        state.isAuthChecked = true;
         if (action.error.message === 'User already exists') {
           state.error = 'Данный пользователь уже зарегистрирован!';
         } else {
@@ -159,16 +159,18 @@ const userSlice = createSlice({
 
       .addCase(logoutUser.pending, (state) => {
         state.isRequested = true;
+        state.isAuthChecked = false;
       })
       .addCase(logoutUser.rejected, (state) => {
         state.isRequested = false;
         state.error = 'Ой, что-то пошло не так...';
+        state.isAuthChecked = true;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.data = null;
         state.isRequested = false;
         state.isAuthenticated = false;
-        state.isAuthChecked = false;
+        state.isAuthChecked = true;
         state.error = null;
         state.isSuccessRegistrarion = false;
         deleteCookie('accessToken');
@@ -177,10 +179,12 @@ const userSlice = createSlice({
 
       .addCase(updateUser.pending, (state) => {
         state.isRequested = true;
+        state.isAuthenticated = false;
       })
       .addCase(updateUser.rejected, (state) => {
         state.isRequested = false;
         state.error = 'Ой, что-то пошло не так...';
+        state.isAuthenticated = true;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
         state.data = action.payload.user;
