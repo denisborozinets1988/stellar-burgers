@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient, TOrder, TUser } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,7 +13,8 @@ import {
   orderBurger,
   selectOrderIsRequested,
   selectOrder,
-  removeOrder
+  removeOrder,
+  selectOrderSuccess
 } from '../../slices/orderCurrentSlice';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,9 +25,14 @@ export const BurgerConstructor: FC = () => {
     selectItems
   );
   const orderRequest = useSelector<RootState, boolean>(selectOrderIsRequested);
+  const orderSuccess = useSelector<RootState, boolean>(selectOrderSuccess);
   let orderModalData = useSelector<RootState, TOrder | null>(selectOrder);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(removeConstructorItemsAll());
+  }, [orderSuccess]);
 
   const constructorItems = {
     ...(bun && {
@@ -42,19 +48,20 @@ export const BurgerConstructor: FC = () => {
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
     if (user) {
-      dispatch(orderBurger([...ingredients.map((x) => x._id), bun!._id]));
+      dispatch(
+        orderBurger([...ingredients.map((x) => x._id), bun!._id, bun!._id])
+      );
     } else {
       navigate('/login');
     }
   };
   const closeOrderModal = () => {
     dispatch(removeOrder());
-    dispatch(removeConstructorItemsAll());
   };
 
   const price = useMemo(
     () =>
-      (constructorItems.bun ? bun?.price ?? 0 * 2 : 0) +
+      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
       constructorItems.ingredients.reduce(
         (s: number, v: TConstructorIngredient) => s + v.price,
         0

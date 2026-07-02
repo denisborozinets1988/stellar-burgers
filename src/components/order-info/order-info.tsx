@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient, TOrder } from '@utils-types';
@@ -23,13 +23,15 @@ export const OrderInfo: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   let orderData = useSelector<RootState, TOrder | null>(selectOrderData);
 
+  useEffect(() => {
+    if (!ordersActual.length && !orderData) {
+      dispatch(getOrderByNumber(Number.parseInt(id ?? '')));
+    }
+  }, [ordersActual]);
+
   if (ordersActual.length) {
     orderData =
       ordersActual.find((x) => x.number === Number.parseInt(id ?? '')) ?? null;
-  } else {
-    if (!orderData) {
-      dispatch(getOrderByNumber(Number.parseInt(id ?? '')));
-    }
   }
 
   const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);

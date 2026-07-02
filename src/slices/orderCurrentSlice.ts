@@ -1,17 +1,23 @@
 import { orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from 'src/services/store';
+import { removeConstructorItemsAll } from './constructorSlice';
+import { useEffect } from 'react';
 
 interface TOrderState {
   order: TOrder | null;
   isRequested: boolean;
   error: string | null;
+  orderSuccess: boolean;
 }
 
 const initialState: TOrderState = {
   order: null,
   isRequested: false,
-  error: null
+  error: null,
+  orderSuccess: false
 };
 
 export const orderBurger = createAsyncThunk(
@@ -30,18 +36,21 @@ const orderCurrentSlice = createSlice({
   selectors: {
     selectOrderIsRequested: (sliceState) => sliceState.isRequested,
     selectOrderError: (sliceState) => sliceState.error,
-    selectOrder: (sliceState) => sliceState.order
+    selectOrder: (sliceState) => sliceState.order,
+    selectOrderSuccess: (sliceState) => sliceState.orderSuccess
   },
   extraReducers: (builder) => {
     builder
       .addCase(orderBurger.pending, (state) => {
         state.order = null;
         state.isRequested = true;
+        state.orderSuccess = false;
         state.error = null;
       })
       .addCase(orderBurger.rejected, (state, action) => {
         state.order = null;
         state.isRequested = false;
+        state.orderSuccess = false;
         state.error = 'Ой, что-то пошло не так...';
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
@@ -56,12 +65,17 @@ const orderCurrentSlice = createSlice({
           ingredients: action.meta.arg
         };
         state.isRequested = false;
+        state.orderSuccess = true;
         state.error = null;
       });
   }
 });
 
-export const { selectOrderIsRequested, selectOrderError, selectOrder } =
-  orderCurrentSlice.selectors;
+export const {
+  selectOrderIsRequested,
+  selectOrderError,
+  selectOrder,
+  selectOrderSuccess
+} = orderCurrentSlice.selectors;
 export const { removeOrder } = orderCurrentSlice.actions;
 export default orderCurrentSlice.reducer;
