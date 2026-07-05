@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorIngredient } from '@utils-types';
 
 export interface IConstructorState {
@@ -17,18 +17,21 @@ const constructorSlice = createSlice({
   name: 'constructorItems',
   initialState,
   reducers: {
-    addConstructorItems: (
-      state,
-      action: PayloadAction<TConstructorIngredient>
-    ) => {
-      const item = action.payload;
-      if (item.type === 'bun') {
-        state.bun = item;
-      } else {
-        state.maxId = state.maxId ? state.maxId + 1 : 1;
-        item.id = state.maxId.toString();
-        state.constructorItems.push(item);
-      }
+    addConstructorItems: {
+      reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
+        const item = action.payload;
+        if (item.type === 'bun') {
+          state.bun = item;
+        } else {
+          state.constructorItems.push(item);
+        }
+      },
+      prepare: (item: TConstructorIngredient) => ({
+        payload: {
+          ...item,
+          id: nanoid()
+        }
+      })
     },
     removeConstructorItems: (state, action: PayloadAction<string>) => {
       state.constructorItems = state.constructorItems.filter(

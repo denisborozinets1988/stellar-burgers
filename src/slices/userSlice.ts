@@ -8,7 +8,7 @@ import {
 } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
-import { deleteCookie, getCookie, setCookie } from '../../src/utils/cookie';
+import { deleteCookie, setCookie } from '../../src/utils/cookie';
 
 interface TUserState {
   isAuthChecked: boolean;
@@ -30,8 +30,17 @@ const initialState: TUserState = {
 
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async ({ email, password }: Omit<TRegisterData, 'name'>) =>
-    await loginUserApi({ email, password })
+  async (
+    { email, password }: Omit<TRegisterData, 'name'>,
+    { rejectWithValue }
+  ) => {
+    const response = await loginUserApi({ email, password });
+    setCookie('accessToken', response.accessToken, {
+      expires: 1000000
+    });
+    localStorage.setItem('refreshToken', response.refreshToken);
+    return response.user;
+  }
 );
 
 export const registerUser = createAsyncThunk(
@@ -53,7 +62,12 @@ export const getUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
-  async () => await logoutApi()
+  async (_, { rejectWithValue }) => {
+    await logoutApi();
+    deleteCookie('accessToken');
+    localStorage.removeItem('refreshToken');
+    return undefined;
+  }
 );
 
 const userSlice = createSlice({
@@ -91,16 +105,12 @@ const userSlice = createSlice({
         state.isSuccessRegistrarion = false;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.data = action.payload.user;
+        state.data = action.payload;
         state.isRequested = false;
         state.isAuthenticated = true;
         state.isAuthChecked = true;
         state.error = null;
         state.isSuccessRegistrarion = false;
-        setCookie('accessToken', action.payload.accessToken, {
-          expires: 1000000
-        });
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
 
       .addCase(registerUser.pending, (state) => {
@@ -173,8 +183,6 @@ const userSlice = createSlice({
         state.isAuthChecked = true;
         state.error = null;
         state.isSuccessRegistrarion = false;
-        deleteCookie('accessToken');
-        localStorage.removeItem('refreshToken');
       })
 
       .addCase(updateUser.pending, (state) => {

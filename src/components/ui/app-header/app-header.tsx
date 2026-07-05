@@ -35,30 +35,41 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
               </>
             )}
           </NavLink>
-          <div
-            className='button'
-            onClick={() => {
-              navigate('/feed');
-            }}
+          <NavLink
+            to='/feed'
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.link_active : ''}`
+            }
+            end
           >
-            <ListIcon type={'primary'} />
-            <p className='text text_type_main-default ml-2'>Лента заказов</p>
-          </div>
+            {({ isActive }) => (
+              <>
+                <ListIcon type={isActive ? 'primary' : 'secondary'} />
+                <p className='text text_type_main-default ml-2'>
+                  Лента заказов
+                </p>
+              </>
+            )}
+          </NavLink>
         </div>
         <div className={styles.logo}>
           <Logo className='' />
         </div>
-        <div
-          className={styles.link_position_last + ' button'}
-          onClick={() => {
-            user ? navigate('/profile') : navigate('/login');
-          }}
+        <NavLink
+          to={user ? '/profile' : '/login'}
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.link_active : ''}`
+          }
         >
-          <ProfileIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2'>
-            {userName || 'Личный кабинет'}
-          </p>
-        </div>
+          {({ isActive }) => (
+            <>
+              <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
+              <p className='text text_type_main-default ml-2'>
+                {userName || 'Личный кабинет'}
+              </p>
+            </>
+          )}
+        </NavLink>
       </nav>
     </header>
   );
