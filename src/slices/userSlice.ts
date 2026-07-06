@@ -45,8 +45,14 @@ export const loginUser = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   'auth/register',
-  async ({ name, email, password }: TRegisterData) =>
-    await registerUserApi({ name, email, password })
+  async ({ name, email, password }: TRegisterData, { rejectWithValue }) => {
+    const response = await registerUserApi({ name, email, password });
+    setCookie('accessToken', response.accessToken, {
+      expires: 1000000
+    });
+    localStorage.setItem('refreshToken', response.refreshToken);
+    return response.user;
+  }
 );
 
 export const updateUser = createAsyncThunk(
@@ -134,7 +140,7 @@ const userSlice = createSlice({
         state.isSuccessRegistrarion = false;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.data = action.payload.user;
+        state.data = action.payload;
         state.isRequested = false;
         state.isAuthenticated = true;
         state.isAuthChecked = true;

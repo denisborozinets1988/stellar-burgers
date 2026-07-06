@@ -2,8 +2,7 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient, TOrder } from '@utils-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 import { selectIngredients } from '../../slices/ingredientsSlice';
 import { useParams } from 'react-router-dom';
 import {
@@ -15,13 +14,13 @@ import { selectOrders } from '../../slices/orderListUserSlice';
 
 export const OrderInfo: FC = () => {
   const { id } = useParams();
-  const orders = useSelector<RootState, TOrder[]>(selectFeed);
-  const ordersUser = useSelector<RootState, TOrder[]>(selectOrders);
+  const orders = useAppSelector(selectFeed);
+  const ordersUser = useAppSelector(selectOrders);
   const ordersActual: TOrder[] = location.pathname.startsWith('/profile/orders')
     ? ordersUser
     : orders;
-  const dispatch = useDispatch<AppDispatch>();
-  let orderData = useSelector<RootState, TOrder | null>(selectOrderData);
+  const dispatch = useAppDispatch();
+  let orderData = useAppSelector(selectOrderData);
 
   useEffect(() => {
     if (!ordersActual.length && !orderData) {
@@ -34,7 +33,7 @@ export const OrderInfo: FC = () => {
       ordersActual.find((x) => x.number === Number.parseInt(id ?? '')) ?? null;
   }
 
-  const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);
+  const ingredients = useAppSelector(selectIngredients);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

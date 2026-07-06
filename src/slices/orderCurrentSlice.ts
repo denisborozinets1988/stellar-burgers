@@ -1,10 +1,6 @@
 import { orderBurgerApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'src/services/store';
-import { removeConstructorItemsAll } from './constructorSlice';
-import { useEffect } from 'react';
 
 interface TOrderState {
   order: TOrder | null;

@@ -1,8 +1,7 @@
 import { FC, useEffect, useMemo } from 'react';
 import { TConstructorIngredient, TOrder, TUser } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 import {
   removeConstructorItemsAll,
   selectBun,
@@ -19,16 +18,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 export const BurgerConstructor: FC = () => {
-  const user = useSelector<RootState, TUser | null>(selectUser);
-  const bun = useSelector<RootState, TConstructorIngredient | null>(selectBun);
-  const ingredients = useSelector<RootState, TConstructorIngredient[]>(
-    selectItems
-  );
-  const orderRequest = useSelector<RootState, boolean>(selectOrderIsRequested);
-  const orderSuccess = useSelector<RootState, boolean>(selectOrderSuccess);
-  let orderModalData = useSelector<RootState, TOrder | null>(selectOrder);
+  const user = useAppSelector(selectUser);
+  const bun = useAppSelector(selectBun);
+  const ingredients = useAppSelector(selectItems);
+  const orderRequest = useAppSelector(selectOrderIsRequested);
+  const orderSuccess = useAppSelector(selectOrderSuccess);
+  let orderModalData = useAppSelector(selectOrder);
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(removeConstructorItemsAll());

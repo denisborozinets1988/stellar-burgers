@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';
 import {
@@ -7,15 +7,12 @@ import {
   Logo,
   ProfileIcon
 } from '@zlden/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../services/store';
-import { TUser } from '@utils-types';
+import { useAppSelector } from '../../../services/store';
 import { selectUser } from '../../../slices/userSlice';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
-  const navigate = useNavigate();
-  const user = useSelector<RootState, TUser | null>(selectUser);
+  const user = useAppSelector(selectUser);
 
   return (
     <header className={styles.header}>

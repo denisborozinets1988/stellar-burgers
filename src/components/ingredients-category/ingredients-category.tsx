@@ -1,23 +1,22 @@
 import { forwardRef, useMemo } from 'react';
 import { TIngredientsCategoryProps } from './type';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import { TIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store';
+import { useAppSelector } from '../../services/store';
 import { selectBun, selectItems } from '../../slices/constructorSlice';
 
 export const IngredientsCategory = forwardRef<
   HTMLUListElement,
   TIngredientsCategoryProps
 >(({ title, titleRef, ingredients }, ref) => {
-  const bun = useSelector<RootState, TConstructorIngredient | null>(selectBun);
+  const bun = useAppSelector(selectBun);
   const burgerConstructor = {
     ...(bun && {
       bun: {
         _id: bun._id
       }
     }),
-    ingredients: useSelector<RootState, TConstructorIngredient[]>(selectItems)
+    ingredients: useAppSelector(selectItems)
   };
 
   const ingredientsCounters = useMemo(() => {
