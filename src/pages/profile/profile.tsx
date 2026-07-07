@@ -1,16 +1,20 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { selectUser, updateUser } from '../../slices/userSlice';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
+  const userState = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
+
   const user = {
-    name: '',
-    email: ''
+    name: userState?.name ?? '',
+    email: userState?.email ?? ''
   };
 
   const [formValue, setFormValue] = useState({
-    name: user.name,
-    email: user.email,
+    name: user?.name,
+    email: user?.email,
     password: ''
   });
 
@@ -20,7 +24,7 @@ export const Profile: FC = () => {
       name: user?.name || '',
       email: user?.email || ''
     }));
-  }, [user]);
+  }, []);
 
   const isFormChanged =
     formValue.name !== user?.name ||
@@ -29,6 +33,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(updateUser(formValue));
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -56,6 +61,4 @@ export const Profile: FC = () => {
       handleInputChange={handleInputChange}
     />
   );
-
-  return null;
 };

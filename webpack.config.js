@@ -81,6 +81,7 @@ module.exports = {
       '@selectors': path.resolve(__dirname, './src/services/selectors')
     }
   },
+  devtool: 'eval-cheap-module-source-map',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'bundle.js'

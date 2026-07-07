@@ -1,33 +1,273 @@
-import { ConstructorPage } from '@pages';
-import '../../index.css';
+import {
+  ConstructorPage,
+  Feed,
+  ForgotPassword,
+  Login,
+  Profile,
+  ProfileOrders,
+  Register,
+  ResetPassword
+} from '@pages';
+
 import styles from './app.module.css';
 
-import { AppHeader } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import { Preloader } from '@ui';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+import {
+  fetchIngredients,
+  selectIngredientsIsLoading,
+  selectIngredients,
+  selectIngredientsError
+} from '../../slices/ingredientsSlice';
+import {
+  selectUser,
+  selectUserIsRequested,
+  selectUserError,
+  selectIsSuccessRegistrarion,
+  getUser
+} from '../../slices/userSlice';
+import { useEffect } from 'react';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate
+} from 'react-router-dom';
+import { ProtectedRoute } from '../protectedRoute';
 
 const App = () => {
-  /** TODO: взять переменные из стора */
-  const isIngredientsLoading = false;
-  const ingredients = [];
-  const error = null;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const background = location.state?.background;
+  const ingredients = useAppSelector(selectIngredients);
+  const isIngredientsLoading = useAppSelector(selectIngredientsIsLoading);
+  const isSuccessRegistrarion = useAppSelector(selectIsSuccessRegistrarion);
+  const ingredientsLoadingError = useAppSelector(selectIngredientsError);
+  const user = useAppSelector(selectUser);
+  const userName = user?.name;
+  const userIsRequested = useAppSelector(selectUserIsRequested);
+  const userError = useAppSelector(selectUserError);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getUser());
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   return (
-    <div className={styles.app}>
-      <AppHeader />
-      {isIngredientsLoading ? (
-        <Preloader />
-      ) : error ? (
-        <div className={`${styles.error} text text_type_main-medium pt-4`}>
-          {error}
-        </div>
-      ) : ingredients.length > 0 ? (
-        <ConstructorPage />
-      ) : (
-        <div className={`${styles.title} text text_type_main-medium pt-4`}>
-          Нет игредиентов
-        </div>
+    <>
+      <Routes location={background ?? location}>
+        <Route
+          path='/'
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              {isIngredientsLoading || userIsRequested ? (
+                <Preloader />
+              ) : ingredientsLoadingError ? (
+                <div
+                  className={`${styles.error} text text_type_main-medium pt-4`}
+                >
+                  {ingredientsLoadingError}
+                </div>
+              ) : ingredients.length > 0 ? (
+                <ConstructorPage />
+              ) : (
+                <div
+                  className={`${styles.title} text text_type_main-medium pt-4`}
+                >
+                  Нет игредиентов
+                </div>
+              )}
+            </div>
+          }
+        />
+        <Route
+          path={'/ingredients/:id'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <div
+                className={`${styles.title} text text_type_main-medium pt-4`}
+              >
+                Детали ингредиента
+              </div>
+              <div className={`${styles.title}`}>
+                <IngredientDetails />
+              </div>
+            </div>
+          }
+        />
+        <Route
+          path={'/login'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              {isSuccessRegistrarion && (
+                <div
+                  className={`${styles.title} text text_type_main-medium pt-4`}
+                >
+                  Вы успешно зарегистрировались! Выполните вход.
+                </div>
+              )}
+              {userIsRequested ? (
+                <Preloader />
+              ) : userError ? (
+                <>
+                  <div
+                    className={`${styles.error} text text_type_main-medium pt-4`}
+                  >
+                    {userError}
+                  </div>
+                  <Login />
+                </>
+              ) : (
+                <ProtectedRoute onlyUnAuth>
+                  <Login />
+                </ProtectedRoute>
+              )}
+            </div>
+          }
+        />
+        <Route
+          path={'/register'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              {userIsRequested ? (
+                <Preloader />
+              ) : userError ? (
+                <>
+                  <div
+                    className={`${styles.error} text text_type_main-medium pt-4`}
+                  >
+                    {userError}
+                  </div>
+                  <Register />
+                </>
+              ) : isSuccessRegistrarion ? (
+                <Navigate to='/login' replace />
+              ) : (
+                <ProtectedRoute onlyUnAuth>
+                  <Register />
+                </ProtectedRoute>
+              )}
+            </div>
+          }
+        />
+        <Route
+          path={'/profile'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            </div>
+          }
+        />
+        <Route
+          path={'/profile/orders'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <ProtectedRoute>
+                <ProfileOrders />
+              </ProtectedRoute>
+            </div>
+          }
+        />
+        <Route
+          path={'/profile/orders/:id'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <ProtectedRoute>
+                <OrderInfo />
+              </ProtectedRoute>
+            </div>
+          }
+        />
+        <Route
+          path={'/forgot-password'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <ProtectedRoute onlyUnAuth>
+                <ForgotPassword />
+              </ProtectedRoute>
+            </div>
+          }
+        />
+        <Route
+          path={'/reset-password'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <ProtectedRoute onlyUnAuth>
+                <ResetPassword />
+              </ProtectedRoute>
+            </div>
+          }
+        />
+        <Route
+          path={'/feed'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <Feed />
+            </div>
+          }
+        />{' '}
+        <Route
+          path={'/feed/:id'}
+          element={
+            <div className={styles.app}>
+              <AppHeader userName={userName} />
+              <div
+                className={`${styles.title} text text_type_main-medium pt-4`}
+              >
+                Детали заказа
+              </div>
+              <div className={`${styles.title}`}>
+                <OrderInfo />
+              </div>
+            </div>
+          }
+        />
+      </Routes>
+
+      {background && (
+        <Routes>
+          <Route
+            path={'/ingredients/:id'}
+            element={
+              <Modal title={'Детали ингредиента'} onClose={() => navigate(-1)}>
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path={'/feed/:id'}
+            element={
+              <Modal title={'Детали заказа'} onClose={() => navigate(-1)}>
+                <OrderInfo />
+              </Modal>
+            }
+          />
+          <Route
+            path={'/profile/orders/:id'}
+            element={
+              <Modal title={'Детали заказа'} onClose={() => navigate(-1)}>
+                <OrderInfo />
+              </Modal>
+            }
+          />
+        </Routes>
       )}
-    </div>
+    </>
   );
 };
 

@@ -1,0 +1,108 @@
+[33mcommit 1053f434c901b4d4dd2899ea1372ead32ab32ba7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Thu Jun 25 19:38:26 2026 +0300
+
+    1. Багфиксы
+
+[33mcommit 23059a0db240f5c789e4a6c8e0311b3ee1801668[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Wed Jun 24 22:01:28 2026 +0300
+
+    1. Смена данных в профиле.
+
+[33mcommit cab2dc6dc228287f532ac16f3f98732a21e21a12[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Wed Jun 24 20:51:03 2026 +0300
+
+    1. Профиль.
+
+[33mcommit 269cbc04ffc9b0bde3c5aaa0a08cafad622dbd6d[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Tue Jun 23 21:20:10 2026 +0300
+
+    1. Оформление заказа.
+
+[33mcommit 6e03fea422a7ea400cf417c5bd0133295c15e43a[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Mon Jun 22 21:50:18 2026 +0300
+
+    1. Открытие заказа из общего списка.
+
+[33mcommit e905f48a14d165174d33be110cb13d19b96f1eaa[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Sun Jun 21 20:56:47 2026 +0300
+
+    1. Заказы.
+
+[33mcommit 5ddfa1536215d547250e733ce05ea6194a393432[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Sun Jun 21 19:37:51 2026 +0300
+
+    1. Заказы.
+
+[33mcommit c9bd2ce8795b0d260a0d75e7314048fa852860fa[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Sat Jun 20 18:18:39 2026 +0300
+
+    1. Регистрация/Вход.
+
+[33mcommit db70e78a405476311cd34d24d4abdb01e88f6146[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Thu Jun 18 21:33:59 2026 +0300
+
+    1. Регистрация нового пользователя.
+
+[33mcommit 7f1663d75bb060bf975282ef3086e4c5c2fa16aa[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Tue Jun 16 22:51:38 2026 +0300
+
+    1. Завёл необходимые слайсы.
+    2. Добавил роутинг логина/регистрации/восстановления.
+
+[33mcommit 05778b79d26f029fa8161c52d75549c1d82fef95[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Mon Jun 15 20:13:08 2026 +0300
+
+    1. Добавлено количество на ингредиентах.
+
+[33mcommit 37537bef7ace017ffe55cb98c0141445fb8a220f[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Mon Jun 15 00:21:50 2026 +0300
+
+    1. Кнопки удаления и перемещения содержимого бургера.
+
+[33mcommit b70a24c5d50fbd5c773bcd15b73198efbb270cdf[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Sun Jun 14 23:30:04 2026 +0300
+
+    1. Конструктор бургера.
+
+[33mcommit ca10e46b0820b66efb55b45673980bd97616ecb8[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Sat Jun 13 14:57:52 2026 +0300
+
+    1. Модальное окно с подробной информацией об ингредиенте.
+
+[33mcommit dc55c95874b2298e7dfa345c363f6fe452751934[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Fri Jun 12 01:12:47 2026 +0300
+
+    1. Получение списка ингредиентов.
+
+[33mcommit 6c6500216c3da33ae8280121a8c3d47c77d8eebb[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Tue Jun 9 22:03:43 2026 +0300
+
+    1. Старт проекта.
+
+[33mcommit d192c65c24a2b0e88968fcf32a4ed40def43c92b[m
+Author: Денис Борозинец <denis.borozinets@yandex.ru>
+Date:   Tue Jun 9 22:00:26 2026 +0300
+
+    1. Старт проекта.
+
+[33mcommit 15a4bbf0265785d9dc51af430998e2bf3a60ec9c[m
+Author: Денис <denis.borozinets@yandex.ru>
+Date:   Tue Jun 9 10:41:24 2026 +0300
+
+    Initial commit
